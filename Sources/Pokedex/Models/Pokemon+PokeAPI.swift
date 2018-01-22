@@ -32,7 +32,7 @@ public final class PokeAPI {
             /// This Pokemon was not cached, we need to query the PokeAPI to verify.
             return self.fetchPokemon(named: name).flatMap(to: Bool.self) { res in
                 switch res.status.code {
-                case 200..<302: // HACK: Pretend 302 is 200 until SSL works
+                case 200..<302: // FIXME: Pretend 301 is 200 until SSL works
                     /// The API returned 2xx which means this is a real Pokemon name
                     return try self.cache.set(true, forKey: key).transform(to: true)
                 case 404:
