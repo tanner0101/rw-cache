@@ -1,6 +1,7 @@
 import Vapor
 
-final class PokeAPI {
+/// A simple wrapper around the "pokeapi.co" API.
+public final class PokeAPI {
     /// The HTTP client powering this API.
     let client: Client
 
@@ -8,7 +9,7 @@ final class PokeAPI {
     let cache: KeyedCache
 
     /// Creates a new `PokeAPI` wrapper from the supplied client and cache.
-    init(client: Client, cache: KeyedCache) {
+    public init(client: Client, cache: KeyedCache) {
         self.client = client
         self.cache = cache
     }
@@ -17,7 +18,7 @@ final class PokeAPI {
     ///
     /// - parameter client: Queries the "pokeapi.co" API to verify supplied names
     /// - parameter cache: Caches client results to minimize slow, external API calls
-    func verifyName(_ name: String) throws -> Future<Bool> {
+    public func verifyName(_ name: String) throws -> Future<Bool> {
         /// create a consistent cache key
         let key = name.lowercased()
         return try cache.get(Bool.self, forKey: key).flatMap(to: Bool.self) { result in
@@ -44,7 +45,7 @@ final class PokeAPI {
     }
 
     /// Fetches a pokemen with the supplied name from the PokeAPI.
-    func fetchPokemon(named name: String) -> Future<Response> {
+    public func fetchPokemon(named name: String) -> Future<Response> {
         let uri = URI("http://pokeapi.co/api/v2/pokemon/\(name)")
         return client.get(uri)
     }
@@ -53,7 +54,7 @@ final class PokeAPI {
 /// Allow our custom PokeAPI wrapper to be used as a Vapor service.
 extension PokeAPI: ServiceType {
     /// See `ServiceType.makeService(for:)`
-    static func makeService(for container: Container) throws -> PokeAPI {
+    public static func makeService(for container: Container) throws -> PokeAPI {
         /// Use the container to create the Client and KeyedCache services our PokeAPI wrapper needs.
         return try PokeAPI(
             client: container.make(for: PokeAPI.self),
