@@ -1,4 +1,4 @@
-import App
+import Pokedex
 import Service
 import Vapor
 import COperatingSystem // Remove this when Xcode bug is fixed
@@ -8,7 +8,7 @@ do {
     var env = try Environment.detect()
     var services = Services.default()
 
-    try App.configure(&config, &env, &services)
+    try Pokedex.configure(&config, &env, &services)
 
     let app = try Application(
         config: config,
@@ -16,7 +16,7 @@ do {
         services: services
     )
 
-    try App.boot(app)
+    try Pokedex.boot(app)
 
     try app.run()
 } catch {
